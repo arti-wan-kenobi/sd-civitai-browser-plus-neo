@@ -35,8 +35,8 @@ def init():
 
 _print = print
 def print(print_message):
-    _print(f'\033[96mCivitAI Browser+\033[0m: {print_message}')
+    _print(f'\033[96mSD CivitAI Browser+ NEO\033[0m: {print_message}')
     
 def debug_print(print_message):
     if do_debug_print:
-        _print(f'\033[96m[DEBUG] CivitAI Browser+\033[0m: {print_message}')
+        _print(f'\033[96m[DEBUG] SD CivitAI Browser+ NEO\033[0m: {print_message}')

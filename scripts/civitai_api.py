@@ -40,89 +40,111 @@ def contenttype_folder(content_type, desc=None, fromCheck=False, custom_folder=N
     if content_type == "modelFolder":
         folder = os.path.join(main_models)
         
+    # Helper to get the first directory from a list-type or single-value cmd_opt
+    def _get_dir(attr_name, fallback):
+        val = getattr(cmd_opts, attr_name, None)
+        if val is None:
+            return fallback
+        if isinstance(val, (list, tuple)):
+            return val[0] if val else fallback
+        return val if val else fallback
+
     if content_type == "Checkpoint":
-        if cmd_opts.ckpt_dir and not custom_folder:
-            folder = cmd_opts.ckpt_dir
+        _ckpt = _get_dir("ckpt_dirs", None) or _get_dir("ckpt_dir", None)
+        if _ckpt and not custom_folder:
+            folder = _ckpt
         else:
             folder = os.path.join(main_models,"Stable-diffusion")
-            
+
     elif content_type == "Hypernetwork":
-        if cmd_opts.hypernetwork_dir and not custom_folder:
-            folder = cmd_opts.hypernetwork_dir
+        _hyp = _get_dir("hypernetwork_dir", None)
+        if _hyp and not custom_folder:
+            folder = _hyp
         else:
             folder = os.path.join(main_models, "hypernetworks")
-        
+
     elif content_type == "TextualInversion":
-        if cmd_opts.embeddings_dir and not custom_folder:
-            folder = cmd_opts.embeddings_dir
+        _emb = _get_dir("embeddings_dir", None)
+        if _emb and not custom_folder:
+            folder = _emb
         else:
             folder = os.path.join(main_data, "embeddings")
-        
+
     elif content_type == "AestheticGradient":
         if not custom_folder:
             folder = os.path.join(extensions_dir, "stable-diffusion-webui-aesthetic-gradients", "aesthetic_embeddings")
         else:
             folder = os.path.join(custom_folder, "aesthetic_embeddings")
-            
+
     elif content_type == "LORA":
-        if cmd_opts.lora_dir and not custom_folder:
-            folder = cmd_opts.lora_dir
+        _lora = _get_dir("lora_dirs", None) or _get_dir("lora_dir", None)
+        if _lora and not custom_folder:
+            folder = _lora
         else:
-            folder = folder = os.path.join(main_models, "Lora")
-        
+            folder = os.path.join(main_models, "Lora")
+
     elif content_type == "LoCon":
         folder = os.path.join(main_models, "LyCORIS")
         if use_LORA and not fromCheck:
-            if cmd_opts.lora_dir and not custom_folder:
-                folder = cmd_opts.lora_dir
+            _lora = _get_dir("lora_dirs", None) or _get_dir("lora_dir", None)
+            if _lora and not custom_folder:
+                folder = _lora
             else:
-                folder = folder = os.path.join(main_models, "Lora")
+                folder = os.path.join(main_models, "Lora")
 
     elif content_type == "DoRA":
-        if cmd_opts.lora_dir and not custom_folder:
-            folder = cmd_opts.lora_dir
+        _lora = _get_dir("lora_dirs", None) or _get_dir("lora_dir", None)
+        if _lora and not custom_folder:
+            folder = _lora
         else:
-            folder = folder = os.path.join(main_models, "Lora")
-            
+            folder = os.path.join(main_models, "Lora")
+
     elif content_type == "VAE":
-        if cmd_opts.vae_dir and not custom_folder:
-            folder = cmd_opts.vae_dir
+        _vae = _get_dir("vae_dirs", None) or _get_dir("vae_dir", None)
+        if _vae and not custom_folder:
+            folder = _vae
         else:
             folder = os.path.join(main_models, "VAE")
-            
+
     elif content_type == "Controlnet":
-        if hasattr(cmd_opts, 'controlnet_dir') and cmd_opts.controlnet_dir and not custom_folder:
-            folder = cmd_opts.controlnet_dir
+        _cn = _get_dir("controlnet_dir", None)
+        if _cn and not custom_folder:
+            folder = _cn
         else:
             folder = os.path.join(main_models, "ControlNet")
-            
+
     elif content_type == "Poses":
         folder = os.path.join(main_models, "Poses")
-    
+
     elif content_type == "Upscaler":
         if "SWINIR" in desc:
-            if cmd_opts.swinir_models_path and not custom_folder:
-                folder = cmd_opts.swinir_models_path
+            _p = _get_dir("swinir_models_path", None)
+            if _p and not custom_folder:
+                folder = _p
             else:
                 folder = os.path.join(main_models, "SwinIR")
         elif "REALESRGAN" in desc:
-            if cmd_opts.realesrgan_models_path and not custom_folder:
-                folder = cmd_opts.realesrgan_models_path
+            _p = _get_dir("realesrgan_models_path", None)
+            if _p and not custom_folder:
+                folder = _p
             else:
                 folder = os.path.join(main_models, "RealESRGAN")
         elif "GFPGAN" in desc:
-            if cmd_opts.gfpgan_models_path and not custom_folder:
-                folder = cmd_opts.gfpgan_models_path
+            _p = _get_dir("gfpgan_models_path", None)
+            if _p and not custom_folder:
+                folder = _p
             else:
                 folder = os.path.join(main_models, "GFPGAN")
         elif "BSRGAN" in desc:
-            if cmd_opts.bsrgan_models_path and not custom_folder:
-                folder = cmd_opts.bsrgan_models_path
+            _p = _get_dir("bsrgan_models_path", None)
+            if _p and not custom_folder:
+                folder = _p
             else:
                 folder = os.path.join(main_models, "BSRGAN")
         else:
-            if cmd_opts.esrgan_models_path and not custom_folder:
-                folder = cmd_opts.esrgan_models_path
+            _p = _get_dir("esrgan_models_path", None)
+            if _p and not custom_folder:
+                folder = _p
             else:
                 folder = os.path.join(main_models, "ESRGAN")
             
