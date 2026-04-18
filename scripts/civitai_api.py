@@ -327,6 +327,7 @@ def create_api_url(content_type=None, sort_type=None, period_type=None, use_sear
         params["types"] = content_type
     
     if use_search_term != "None" and search_term:
+        search_term = re.sub(r'(?i)https?://civitai\.red(?=/|\?|$)', 'https://civitai.com', search_term)
         search_term = search_term.replace("\\", "\\\\").lower()
         if "civitai.com" in search_term:
             model_number = re.search(r'models/(\d+)', search_term).group(1)
