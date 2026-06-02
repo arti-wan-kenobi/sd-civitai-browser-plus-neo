@@ -312,6 +312,9 @@ def model_list_html(json_data):
     HTML += '</div>'
     return HTML
 
+def normalize_civitai_domain(search_term: str) -> str:
+    return re.sub(r"civitai\.red", "civitai.com", search_term, flags=re.IGNORECASE)
+
 def create_api_url(content_type=None, sort_type=None, period_type=None, use_search_term=None, base_filter=None, only_liked=None, tile_count=None, search_term=None, nsfw=None, isNext=None):
     base_url = "https://civitai.com/api/v1/models"
     version_url = "https://civitai.com/api/v1/model-versions"
@@ -327,6 +330,7 @@ def create_api_url(content_type=None, sort_type=None, period_type=None, use_sear
         params["types"] = content_type
     
     if use_search_term != "None" and search_term:
+        search_term = normalize_civitai_domain(search_term)
         search_term = search_term.replace("\\", "\\\\").lower()
         if "civitai.com" in search_term:
             model_number = re.search(r'models/(\d+)', search_term).group(1)

@@ -1161,9 +1161,44 @@ function insertGuideMessage(html_input) {
     }
 }
 
+function normalizeCivitaiSearchDomain(text) {
+    return text.replace(/civitai\.red/gi, 'civitai.com');
+}
+
+function setupSearchBoxDomainNormalize() {
+    const tab = gradioApp().querySelector('#tab_civitai_interface');
+    if (!tab || tab.dataset.civitaiSearchNormalize) {
+        return;
+    }
+    tab.dataset.civitaiSearchNormalize = '1';
+
+    tab.addEventListener('paste', (e) => {
+        if (!e.target.closest('#searchBox')) {
+            return;
+        }
+        setTimeout(() => {
+            const textarea = tab.querySelector('#searchBox textarea');
+            if (textarea && /civitai\.red/i.test(textarea.value)) {
+                textarea.value = normalizeCivitaiSearchDomain(textarea.value);
+                updateInput(textarea);
+            }
+        }, 0);
+    }, true);
+
+    tab.addEventListener('input', (e) => {
+        const target = e.target;
+        if (!target.closest('#searchBox') || !/civitai\.red/i.test(target.value)) {
+            return;
+        }
+        target.value = normalizeCivitaiSearchDomain(target.value);
+        updateInput(target);
+    });
+}
+
 // Runs all functions when the page is fully loaded
 function onPageLoad() {
     updateSVGIcons();
+    setupSearchBoxDomainNormalize();
 
     let subfolderDiv = document.querySelector("#settings_civitai_browser_plus > div > div");
     let downloadDiv = document.querySelector("#settings_civitai_browser_download > div > div");
